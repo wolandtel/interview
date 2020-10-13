@@ -2,6 +2,8 @@
 
 class Desk {
     private $figures = [];
+    /** @var Move[] */
+    private $moves = [];
 
     public function __construct() {
         $this->figures['a'][1] = new Rook(false);
@@ -42,19 +44,14 @@ class Desk {
     }
 
     public function move($move) {
-        if (!preg_match('/^([a-h])(\d)-([a-h])(\d)$/', $move, $match)) {
-            throw new \Exception("Incorrect move");
+        $moveObject = new Move($move);
+        if ($movesCount = count($this->moves)) {
+            $prevMove = $this->moves[$movesCount - 1];
+        } else {
+            $prevMove = null;
         }
-
-        $xFrom = $match[1];
-        $yFrom = $match[2];
-        $xTo   = $match[3];
-        $yTo   = $match[4];
-
-        if (isset($this->figures[$xFrom][$yFrom])) {
-            $this->figures[$xTo][$yTo] = $this->figures[$xFrom][$yFrom];
-        }
-        unset($this->figures[$xFrom][$yFrom]);
+        $moveObject->apply($this->figures, $prevMove);
+        $this->moves[] = $moveObject;
     }
 
     public function dump() {

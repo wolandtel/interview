@@ -11,4 +11,11 @@ class Figure {
     public function __toString() {
         throw new \Exception("Not implemented");
     }
+    
+    public function isBlack(): bool
+    {
+        return $this->isBlack;
+    }
+    
+    public function check(Move $current, ?Move $prev): void {}
 }
